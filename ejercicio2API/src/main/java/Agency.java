@@ -1,6 +1,6 @@
 import java.util.Comparator;
 
-public class Agency implements Comparable<Agency> {
+public class Agency implements Comparable<Agency>{
 
     private Address address;
     private String agency_code;
@@ -125,7 +125,7 @@ public class Agency implements Comparable<Agency> {
 
     @Override
     public int compareTo(Agency o) {
-        return this.agency_code.compareTo(o.agency_code);
+        return this.compareTo(o);
     }
 
     public static Comparator<Agency> addressComparator = new Comparator<Agency>() {

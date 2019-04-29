@@ -9,8 +9,8 @@ public class Ordenador<T> {
         return t;
     }
 
-    public static <T extends Comparable<T>> T[] ordenar(T[] array, Comparator<T> comparador){
-        Arrays.sort(array, comparador);
+    public static <T extends Comparable<T>> T[] ordenarPorCriterio(T[] array, Comparator<T> comparator){
+        Arrays.sort(array, comparator);
         return array;
     }
 

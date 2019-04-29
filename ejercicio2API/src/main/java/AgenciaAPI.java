@@ -30,14 +30,15 @@ public class AgenciaAPI {
             String latitud = coordenadasArray[0];
             String longitud = coordenadasArray[1];
             String radio = coordenadasArray[2];*/
-            String criterioOrden = request.queryParams("criterioOrden");
-            System.out.println(criterioOrden);
-            String limite = "";
+            /*CriterioOrdenAgencia criterioOrden = CriterioOrdenAgencia.valueOf(request.queryParams("criterioOrden"));
+            System.out.println(criterioOrden);*/
+
+            String limite=null;
             if (request.queryParams().contains("limit")) {
                 limite = request.queryParams("limit");
                 System.out.println(limite);
             }
-            String offset = "";
+            String offset = null;
             if (request.queryParams().contains("offset")) {
                 offset = request.queryParams("offset");
                 System.out.println(offset);
@@ -47,37 +48,64 @@ public class AgenciaAPI {
                         "/payment_methods/" + idMetodoPago +
                         "/agencies?near_to=" + coordenada;
                 System.out.println(urlAgencies);
-                if (limite != "" & offset != "") {
+                if (limite != null & offset != null) {
                     urlAgencies = "https://api.mercadolibre.com/sites/" + idSitio +
                             "/payment_methods/" + idMetodoPago +
                             "/agencies?near_to=" + coordenada + "&limit=" + limite + "&offset=" + offset;
+                    System.out.println("limite y offset no son nulos");
                 }
-                if (offset != "") {
+                if (offset != null & limite==null) {
                     urlAgencies = "https://api.mercadolibre.com/sites/" + idSitio +
                             "/payment_methods/" + idMetodoPago +
                             "/agencies?near_to=" + coordenada + "&offset=" + offset;
+                    System.out.println("offset no es nulo");
                 }
-                if (limite != "") {
+                if (limite != null & offset==null) {
                     urlAgencies = "https://api.mercadolibre.com/sites/" + idSitio +
                             "/payment_methods/" + idMetodoPago +
                             "/agencies?near_to=" + coordenada + "&limit=" + limite;
+                    System.out.println("limite no es nulo");
                 }
+
                 System.out.println(urlAgencies);
                 String dataAgencies = readUrl(urlAgencies);
                 Agency[] agencies = new Gson().fromJson(new JsonParser().parse(dataAgencies).
                         getAsJsonObject().get("results"), Agency[].class);
-                if (criterioOrden.contains("ADDRESS")){
-                    System.out.println("es address");
-                    Ordenador.ordenar(agencies,Agency.addressComparator);
+                System.out.println("El array de agencias tiene longitud " + agencies.length);
+                /*if (criterioOrden==CriterioOrdenAgencia.ADDRESS){
+                    System.out.println("ordena por address");
+                    Ordenador.ordenarPorCriterio(agencies, new Comparator<Agency>() {
+                        @Override
+                        public int compare(Agency a1, Agency a2) {
+                            return a1.getAddress().getAddress_line().compareTo(a2.getAddress().getAddress_line());
+                        }
+                    });
                 }
-                if (criterioOrden.contains("CODE")){
-                    System.out.println("es code");
-                    Ordenador.ordenar(agencies,Agency.codeComparator);
+                if (criterioOrden==CriterioOrdenAgencia.CODE){
+                    System.out.println("ordena por code");
+                    Ordenador.ordenarPorCriterio(agencies, new Comparator<Agency>() {
+                        @Override
+                        public int compare(Agency a1, Agency a2) {
+                            return a1.getAgency_code().compareTo(a2.getAgency_code());
+                        }
+                    });
                 }
+                if (criterioOrden==CriterioOrdenAgencia.DISTANCE){
+                    System.out.println("ordena por distancia");
+                    Ordenador.ordenarPorCriterio(agencies, new Comparator<Agency>() {
+                        @Override
+                        public int compare(Agency a1, Agency a2) {
+                            return a1.getDistance().compareTo(a2.getDistance());
+                        }
+                    });
+                }*/
+                agencyService.clear();
                 for (Agency agency : agencies) {
                     System.out.println(agency.toString());
                     agencyService.addAgency(agency);
+                    System.out.println("se agrego la agencia");
                 }
+                System.out.println(agencyService.getAgency());
             } catch (Exception e) {
                 System.out.println("Ocurrio un problema al obtener las agencias");
                 e.printStackTrace();

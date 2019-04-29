@@ -16,4 +16,9 @@ public class AgencyServiceMapImp implements AgencyService {
     public void addAgency(Agency agency) {
         agencyMap.put(agency.getId(),agency);
     }
+
+    @Override
+    public void clear() {
+        agencyMap.clear();
+    }
 }
